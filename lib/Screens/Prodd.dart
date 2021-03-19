@@ -16,25 +16,10 @@ ProductController productController = Get.put(ProductController());
                 itemBuilder: (context, index) => Dismissible(
                   key: UniqueKey(),
                   onDismissed: (_){
-                    //
-                    // var removed = transactionController.transactions[index];
-                    // transactionController.transactions.removeAt(index);
-                    // Get.snackbar( "History Deleted" , 'Are you Sure you want to delete completely?',
-                    //   isDismissible: true,
-                    //   showProgressIndicator: false,
-                    //   dismissDirection: SnackDismissDirection.HORIZONTAL,
-                    //   mainButton: FlatButton(onPressed: (){
-                    //     if(removed == null){
-                    //       return;
-                    //     }
-                    //     transactionController.transactions.insert(index, removed);
-                    //     removed = null;
-                    //     if(Get.isSnackbarOpen){
-                    //       Get.back();
-                    //     }
-                    //   }, child: Text('Undo')),
-                    //   backgroundColor: kLeadingGradient,
-                    // );
+                    
+//                     THIS IS NOT A REAL PAGE, IT WAS JUST USED TO TEST FOR THE DATA GOT FROM THE API
+                    
+                    
                   },
                   child: Container(
                     child: Padding(
