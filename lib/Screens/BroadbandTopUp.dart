@@ -1,16 +1,19 @@
+import 'dart:convert';
+
 import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mybetter/Controllers/TransactionController.dart';
 import 'package:mybetter/Home.dart';
+import 'package:mybetter/Models/DropDownItems.dart';
 import 'package:mybetter/Models/Transactions.dart';
 import '../Utilities/Rounded Button.dart';
 import 'package:mybetter/Constants.dart';
 import '../Controllers/NetworkProviderVerify.dart';
 
 
-class DataTopUp extends StatelessWidget {
+class BroadbandTopUp extends StatelessWidget {
   static const String id = 'DataTopUp';
 
   NetworkVerify networkVerify = Get.put(NetworkVerify());
@@ -21,7 +24,9 @@ class DataTopUp extends StatelessWidget {
 
   String phoneNo;
   Rx<AssetImage> networks = AssetImage('images/MTNN.jpg').obs;
-  String selectedCurrency = 'MTN';
+  String selectedCurrency = 'SMILE';
+  String selectedPlan = 'Smile 35GB Anytime';
+  String productId = 'smile35gbanytime';
   var savedText = 'd';
   var savedAmount = 'd';
 
@@ -47,7 +52,7 @@ class DataTopUp extends StatelessWidget {
                 children: [
                   RoundButton(
                     icon: Icon(
-                      Icons.router_rounded,
+                      Icons.wifi,
                       color: Colors.white70,
                     ),
                   ),
@@ -55,7 +60,7 @@ class DataTopUp extends StatelessWidget {
                     width: 20,
                   ),
                   Text(
-                    'Mobile Data',
+                    'Broadband Data',
                     style: TextStyle(
                       fontSize: 26,
                       color: Colors.white,
@@ -78,59 +83,22 @@ class DataTopUp extends StatelessWidget {
               child: Column(
                 children: [
                   Obx(()=> TextFormField(
-                      onSaved: (value) {
-                        savedText = value;
-                        print(savedText);
-                      },
-                      onChanged: (value){
-                        print(value);
-                        phoneNo = value;
-                        if (phoneNo.length <= 4){
-                          networkVerify.verifyNetwork(phoneNo);
-                        }
-
-
-                      },
-                      keyboardType: TextInputType.number,
-                      validator: (value) =>
-                      value.trim().isEmpty ? 'Input Phone number' : null,
-                      style: TextStyle(
-                        fontSize: 17,
-                      ),
-
-
-                      decoration: kInvestmentInputDecoration.copyWith(
-                        icon: Icon(
-                          Icons.phone,
-                          color: kLeadingGradient,
-                          size: 27,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.contact_phone_outlined,
-                          color: kLeadingGradient,
-                          size: 27,
-                        ),
-                        labelText: networkVerify.labelText.value,
-                        labelStyle: TextStyle(
-                            color: Colors.grey,
-                          fontFamily: 'Source Sans Pro'
-                        ),
-                      ),
-                  ),),
-
-
-                  TextFormField(
                     onSaved: (value) {
-                      savedAmount = value;
+                      savedText = value;
+                      print(savedText);
                     },
                     onChanged: (value){
                       print(value);
+                      phoneNo = value;
+                      if (phoneNo.length <= 4){
+                        networkVerify.verifyNetwork(phoneNo);
+                      }
 
 
                     },
                     keyboardType: TextInputType.number,
                     validator: (value) =>
-                    value.trim().isEmpty ? 'Input Amount' : null,
+                    value.trim().isEmpty ? 'Input Phone number' : null,
                     style: TextStyle(
                       fontSize: 17,
                     ),
@@ -138,18 +106,24 @@ class DataTopUp extends StatelessWidget {
 
                     decoration: kInvestmentInputDecoration.copyWith(
                       icon: Icon(
-                        Icons.money,
+                        Icons.phone,
                         color: kLeadingGradient,
                         size: 27,
                       ),
-
-                      labelText: 'Amount',
+                      suffixIcon: Icon(
+                        Icons.contact_phone_outlined,
+                        color: kLeadingGradient,
+                        size: 27,
+                      ),
+                      labelText: networkVerify.labelText.value,
                       labelStyle: TextStyle(
                           color: Colors.grey,
                           fontFamily: 'Source Sans Pro'
                       ),
                     ),
-                  ),
+                  ),),
+
+
 
 
                   SizedBox(
@@ -158,46 +132,60 @@ class DataTopUp extends StatelessWidget {
 
                   Row(
                     children: [
-                      Obx(() => Image(image: networkVerify.networks.value,
-                        height: 35,),),
+                      Obx(() => Image(image: networkVerify.networks.value, height: 35,),),
 
-                      SizedBox(
-                        width: 15,
-                      ),
+                      SizedBox(width: 15,),
 
-                      Container(
-                        child: Expanded(
-                          child: DropdownButton(
+                      Container(child: Expanded(child: DropdownButton(
                               isExpanded: true,
                               value: selectedCurrency,
                               iconEnabledColor: kLeadingGradient,
                               hint: Text(selectedCurrency),
-                              items: [
-                                DropdownMenuItem(
-                                  child: Text('MTN'),
-                                  value: 'MTN',
-                                  onTap: (){networkVerify.networks.value = AssetImage('images/MTNN.jpg');},),
-                                DropdownMenuItem(
-                                  child: Text('AIRTEL'),
-                                  value: 'AIRTEL',
-                                  onTap: (){networkVerify.networks.value = AssetImage('images/Airtel.png');},),
-                                DropdownMenuItem(
-                                  child: Text('GLO'),
-                                  value: 'GLO',
-                                  onTap: (){networkVerify.networks.value = AssetImage('images/GLO.jpg');},),
-                                DropdownMenuItem(
-                                  child: Text('9MOBILE',
-                                  ),
-                                  value: '9MOBILE',
-                                  onTap: (){networkVerify.networks.value = AssetImage('images/9mobile.jpg');},)
-                              ],
+                              items: getBroadbandDropdown(),
                               onChanged: (value){
-                                  selectedCurrency = value;
-                                  print(value);
-                              }),
-                        ),
-                      ),
-                    ],
+                                selectedCurrency = value;
+                                print(value);
+                              }),),),],),
+
+                  SizedBox(height: 10,),
+
+                  Row(
+                    children: [
+                      Text('CHOOSE PLAN',
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        fontFamily: 'Source Sans Pro',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),),
+
+                      SizedBox(width: 15,),
+
+                      Container(child: Expanded(child: DropdownButton(
+                          isExpanded: true,
+                          value: selectedPlan,
+                          iconEnabledColor: kLeadingGradient,
+                          hint: Text(selectedPlan),
+                          items: getBroadbandPlansDropdown(),
+                          onChanged: (value){
+                            selectedPlan = value;
+                            productId =  selectedPlan.toLowerCase().removeAllWhitespace;
+                            print(productId);
+                          }),),),],),
+
+                  SizedBox(height: 10,),
+
+                  Container(
+                    width: double.infinity,
+                    color: Colors.black12,
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                    child: Row(
+                      children: [
+                        Icon(Icons.monetization_on),
+                        SizedBox(width: 15,),
+                        Obx(()=> Text('₦${amount.value}'),),
+                      ],
+                    ),
                   ),
 
                   MaterialButton(
@@ -222,10 +210,10 @@ class DataTopUp extends StatelessWidget {
                         child: Text(
                           'Buy Data',
                           style: Theme.of(context).textTheme.button.copyWith(
-                            fontFamily: 'Source Sans Pro',
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
+                              fontFamily: 'Source Sans Pro',
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
                           ),
                         ),
                       ),
@@ -257,9 +245,8 @@ class DataTopUp extends StatelessWidget {
 
   void  processTxn(){
     var dt = DateTime.now();
-
     transactionController.transactions.add(
-        Transactions(title: '${selectedCurrency} Airtime',amount: int.parse(savedAmount), dateTime: DateFormat.yMMMEd().format(dt)),
+      Transactions(title: '${selectedCurrency} Airtime',amount: int.parse(savedAmount), dateTime: DateFormat.yMMMEd().format(dt)),
     );
   }
 }

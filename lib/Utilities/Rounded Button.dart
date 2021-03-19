@@ -14,8 +14,8 @@ class RoundButton extends StatelessWidget {
       elevation: 6,
       fillColor: Color(0X90757575),
       constraints: BoxConstraints.tightFor(
-        height: 48,
-        width: 48,
+        height: 40,
+        width: 40,
       ),
       child: icon,
     );

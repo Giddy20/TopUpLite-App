@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mybetter/Constants.dart';
 
@@ -23,7 +24,7 @@ class ProviderCard extends StatelessWidget {
             width: MediaQuery.of(context).size.width*0.4,
             decoration: BoxDecoration(
               border: Border.all(
-                  color: color, width: focus, style: BorderStyle.solid),
+                  color: Colors.transparent, width: 0, style: BorderStyle.solid),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -37,8 +38,10 @@ class ProviderCard extends StatelessWidget {
                   height: 10.0,
                 ),
                 Text(text,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: kLeadingGradient,
+                    fontFamily: 'Source Sans Pro',
 
                   ),)
               ],
